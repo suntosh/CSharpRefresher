@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoanDepot — Brutal Technical Interview</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --dark: #0f0f0f;
+  --red: #c0392b;
+  --orange: #e67e22;
+  --green: #27ae60;
+  --blue: #2563eb;
+  --border: #d4cfc5;
+  --muted: #8a8070;
+  --code-bg: #1a1a2e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--dark);
+  font-family: 'IBM Plex Sans', sans-serif;
+  min-height: 100vh;
+}
+
+/* INTRO SCREEN */
+#intro {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.brand {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 32px;
+}
+
+#intro h1 {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -3px;
+  margin-bottom: 16px;
+}
+
+#intro h1 span { color: var(--red); }
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.6;
+  margin-bottom: 48px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--red);
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.section-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 48px;
+  max-width: 600px;
+}
+
+.pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  padding: 4px 12px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.pill-red { background: rgba(192,57,43,0.1); color: var(--red); border: 1px solid rgba(192,57,43,0.2); }
+.pill-blue { background: rgba(37,99,235,0.1); color: var(--blue); border: 1px solid rgba(37,99,235,0.2); }
+.pill-orange { background: rgba(230,126,34,0.1); color: var(--orange); border: 1px solid rgba(230,126,34,0.2); }
+.pill-green { background: rgba(39,174,96,0.1); color: var(--green); border: 1px solid rgba(39,174,96,0.2); }
+
+.start-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 16px 48px;
+  background: var(--dark);
+  color: var(--bg);
+  border: none;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.start-btn:hover { background: var(--red); }
+
+.warning {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* INTERVIEW SCREEN */
+#interview {
+  display: none;
+  min-height: 100vh;
+}
+
+.interview-header {
+  position: sticky;
+  top: 0;
+  background: var(--dark);
+  color: var(--bg);
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+}
+
+.header-left {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.timer {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--bg);
+  transition: color 0.3s;
+}
+
+.timer.warning { color: var(--orange); }
+.timer.danger { color: var(--red); }
+
+.progress-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: #888;
+  letter-spacing: 1px;
+}
+
+.progress-bar-thin {
+  height: 3px;
+  background: #333;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--red);
+  transition: width 0.3s ease;
+}
+
+/* QUESTION AREA */
+.question-area {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px 120px;
+}
+
+.q-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.q-number {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  background: var(--dark);
+  color: var(--bg);
+  letter-spacing: 1px;
+}
+
+.q-category {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.q-time {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.question-text {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+
+.follow-up {
+  font-size: 0.9rem;
+  color: var(--red);
+  font-style: italic;
+  margin-bottom: 32px;
+  padding-left: 16px;
+  border-left: 2px solid var(--red);
+}
+
+/* ANSWER REVEAL */
+.answer-toggle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 10px 24px;
+  background: transparent;
+  border: 2px solid var(--dark);
+  color: var(--dark);
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  margin-bottom: 24px;
+}
+
+.answer-toggle:hover {
+  background: var(--dark);
+  color: var(--bg);
+}
+
+.answer-box {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--green);
+  padding: 28px;
+  margin-bottom: 16px;
+  animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.answer-box.show { display: block; }
+
+.answer-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.answer-text {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #2a2a2a;
+}
+
+.answer-text strong { color: var(--dark); }
+
+.answer-text code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  background: rgba(0,0,0,0.07);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--red);
+}
+
+.answer-text pre {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  background: var(--code-bg);
+  color: #abb2bf;
+  padding: 20px;
+  border-radius: 4px;
+  margin: 16px 0;
+  overflow-x: auto;
+  line-height: 1.7;
+}
+
+.answer-text pre .kw { color: #c678dd; }
+.answer-text pre .str { color: #98c379; }
+.answer-text pre .cm { color: #5c6370; font-style: italic; }
+.answer-text pre .fn { color: #61afef; }
+.answer-text pre .tp { color: #e5c07b; }
+.answer-text pre .num { color: #d19a66; }
+
+.trap-box {
+  background: rgba(192,57,43,0.05);
+  border: 1px solid rgba(192,57,43,0.2);
+  border-left: 4px solid var(--red);
+  padding: 16px 20px;
+  margin-top: 16px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.trap-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* SELF SCORE */
+.score-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.score-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.score-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  padding: 5px 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+
+.score-btn.nail { border-color: var(--green); color: var(--green); }
+.score-btn.nail:hover, .score-btn.nail.active { background: var(--green); color: white; }
+.score-btn.partial { border-color: var(--orange); color: var(--orange); }
+.score-btn.partial:hover, .score-btn.partial.active { background: var(--orange); color: white; }
+.score-btn.miss { border-color: var(--red); color: var(--red); }
+.score-btn.miss:hover, .score-btn.miss.active { background: var(--red); color: white; }
+
+/* NAV */
+.nav-row {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.nav-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 10px 28px;
+  border: 2px solid var(--dark);
+  background: transparent;
+  color: var(--dark);
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover { background: var(--dark); color: var(--bg); }
+.nav-btn.primary { background: var(--dark); color: var(--bg); }
+.nav-btn.primary:hover { background: var(--red); border-color: var(--red); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.q-dots {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.q-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.q-dot.current { background: var(--dark); transform: scale(1.3); }
+.q-dot.nailed { background: var(--green); }
+.q-dot.partial { background: var(--orange); }
+.q-dot.missed { background: var(--red); }
+
+/* RESULTS */
+#results {
+  display: none;
+  min-height: 100vh;
+  padding: 60px 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.results-header {
+  margin-bottom: 48px;
+}
+
+.results-header h2 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -2px;
+  margin-bottom: 8px;
+}
+
+.score-display {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 4rem;
+  font-weight: 700;
+  margin: 24px 0;
+}
+
+.score-breakdown {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.breakdown-item {
+  text-align: center;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  min-width: 100px;
+}
+
+.breakdown-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+}
+
+.breakdown-label {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.verdict {
+  padding: 24px;
+  margin-bottom: 32px;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  border-left: 4px solid var(--dark);
+  background: var(--surface);
+}
+
+.restart-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 14px 36px;
+  background: var(--dark);
+  color: var(--bg);
+  border: none;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.restart-btn:hover { background: var(--red); }
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 32px 0;
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="brand">LoanDepot · Principal Engineer · Technical Interview</div>
+  <h1>You're about to get<br><span>destroyed.</span></h1>
+  <p class="subtitle">This is a simulated 1-hour interview with someone who built LoanDepot's loan origination platform from scratch, optimized SQL Server stored procedures for ACH banking, and built a C++ compiler. He's seen every shortcut.</p>
+  
+  <div class="stats-row">
+    <div class="stat"><span class="stat-num">25</span><span class="stat-label">Questions</span></div>
+    <div class="stat"><span class="stat-num">60</span><span class="stat-label">Minutes</span></div>
+    <div class="stat"><span class="stat-num">5</span><span class="stat-label">Sections</span></div>
+  </div>
+
+  <div class="section-pills">
+    <span class="pill pill-red">C# Internals</span>
+    <span class="pill pill-red">Async & Threading</span>
+    <span class="pill pill-blue">SQL Server Deep</span>
+    <span class="pill pill-blue">Query Optimization</span>
+    <span class="pill pill-orange">System Design</span>
+    <span class="pill pill-orange">Loan Domain</span>
+    <span class="pill pill-green">Architecture</span>
+    <span class="pill pill-green">Leadership</span>
+  </div>
+
+  <button class="start-btn" onclick="startInterview()">Begin Interview</button>
+  <p class="warning">// No AI. No searching. Answer first. Reveal after.</p>
+</div>
+
+<!-- INTERVIEW -->
+<div id="interview">
+  <div class="interview-header">
+    <div class="header-left">LoanDepot · Principal Engineer</div>
+    <div class="timer" id="timer">60:00</div>
+    <div class="progress-text" id="progress-text">Q1 of 25</div>
+  </div>
+  <div class="progress-bar-thin">
+    <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+  </div>
+
+  <div class="question-area" id="question-area"></div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="navigate(-1)" disabled>← Prev</button>
+    <div class="q-dots" id="q-dots"></div>
+    <button class="nav-btn primary" id="next-btn" onclick="navigate(1)">Next →</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results">
+  <div class="results-header">
+    <div class="brand">Interview Complete</div>
+    <h2 id="results-title">How'd you do?</h2>
+  </div>
+  <div class="score-display" id="score-display"></div>
+  <div class="score-breakdown" id="score-breakdown"></div>
+  <div class="verdict" id="verdict"></div>
+  <button class="restart-btn" onclick="restart()">Restart Interview</button>
+</div>
+
+<script>
+const questions = [
+  // ═══════════════════════════════════════════
+  // SECTION 1 — C# INTERNALS
+  // ═══════════════════════════════════════════
+  {
+    section: "C# Internals",
+    time: "~2 min",
+    q: "You have a static class with a static Dictionary used as a cache. Multiple HTTP requests hit it simultaneously. Walk me through exactly what goes wrong and how you fix it.",
+    followUp: "And what's wrong with just putting lock(this) on it?",
+    answer: `<strong>The Problem:</strong> Dictionary&lt;K,V&gt; is not thread-safe. Concurrent reads during a write cause corrupted internal state — not just wrong values, but potential infinite loops or exceptions as the internal hash buckets get torn.<br><br>
+<strong>lock(this) is wrong</strong> — you can't call lock(this) on a static member because <code>this</code> doesn't exist in a static context. You'd use a dedicated private static lock object:<br>
+<pre><span class="kw">private static readonly</span> <span class="tp">object</span> _lock = <span class="kw">new</span> <span class="tp">object</span>();
+<span class="kw">lock</span>(_lock) { ... }</pre>
+<strong>But the real fix is ConcurrentDictionary:</strong><br>
+<pre><span class="kw">private static readonly</span> <span class="tp">ConcurrentDictionary</span>&lt;<span class="kw">string</span>, <span class="tp">LoanData</span>&gt; _cache
+    = <span class="kw">new</span> <span class="tp">ConcurrentDictionary</span>&lt;<span class="kw">string</span>, <span class="tp">LoanData</span>&gt;();
+
+<span class="cm">// GetOrAdd is atomic for the lookup — NOT for the factory</span>
+_cache.<span class="fn">GetOrAdd</span>(key, k => <span class="fn">ExpensiveLoad</span>(k));</pre>
+<strong>Critical nuance:</strong> <code>GetOrAdd</code> atomicity only covers the dictionary operation. The factory delegate can be called multiple times under contention. For expensive operations use <code>Lazy&lt;T&gt;</code> inside the value.`,
+    trap: "Saying 'just use lock' without addressing the static context issue, or thinking ConcurrentDictionary's GetOrAdd makes the factory call atomic."
+  },
+  {
+    section: "C# Internals",
+    time: "~2 min",
+    q: "Explain exactly what happens under the hood when you await an async method. Where does execution go? What thread picks it up afterward?",
+    followUp: "What happens if you call .Result on a Task inside an ASP.NET context?",
+    answer: `<strong>What happens at await:</strong><br>
+1. The compiler rewrites the async method into a state machine<br>
+2. At the await point, if the Task is not complete, the method returns control to the caller immediately<br>
+3. A continuation is registered on the Task<br>
+4. When the Task completes, the continuation is scheduled on the <strong>SynchronizationContext</strong> (if one exists) or the ThreadPool<br><br>
+<strong>In ASP.NET (classic), SynchronizationContext is the problem:</strong><br>
+<pre><span class="cm">// DEADLOCK — classic ASP.NET</span>
+<span class="kw">public</span> ActionResult <span class="fn">Get</span>() {
+    <span class="kw">var</span> result = <span class="fn">GetDataAsync</span>().<span class="fn">Result</span>; <span class="cm">// blocks request thread</span>
+    <span class="cm">// async continuation tries to resume on same thread</span>
+    <span class="cm">// that thread is blocked waiting → DEADLOCK</span>
+    <span class="kw">return</span> <span class="fn">View</span>(result);
+}</pre>
+<strong>Fix:</strong> <code>ConfigureAwait(false)</code> tells the continuation not to capture the SynchronizationContext — it resumes on any ThreadPool thread instead. Use it in library code. In ASP.NET Core this matters less because Core has no SynchronizationContext, but it's still best practice.`,
+    trap: "Not knowing about SynchronizationContext, or thinking .Result is safe in ASP.NET Core without understanding why."
+  },
+  {
+    section: "C# Internals",
+    time: "~2 min",
+    q: "What is the difference between Task.Run and Task.Factory.StartNew? When would you use each?",
+    followUp: "I see a lot of code that wraps synchronous database calls in Task.Run. Is that a good pattern?",
+    answer: `<strong>Task.Run</strong> — simplified wrapper around Task.Factory.StartNew with safe defaults. Schedules work on the ThreadPool. Best for CPU-bound work you want off the main thread.<br><br>
+<strong>Task.Factory.StartNew</strong> — more control: custom TaskScheduler, TaskCreationOptions (LongRunning for threads that won't return quickly), parent task relationships. More footguns.<br><br>
+<pre><span class="cm">// Task.Run — simple CPU-bound work</span>
+<span class="kw">await</span> <span class="tp">Task</span>.<span class="fn">Run</span>(() => <span class="fn">HeavyComputation</span>());
+
+<span class="cm">// StartNew with LongRunning — dedicated thread, not ThreadPool</span>
+<span class="tp">Task</span>.Factory.<span class="fn">StartNew</span>(() => <span class="fn">InfiniteLoop</span>(),
+    <span class="tp">TaskCreationOptions</span>.LongRunning);</pre>
+<strong>Wrapping sync DB calls in Task.Run is an anti-pattern.</strong> You're not gaining async I/O benefits — you're just moving the blocking from one thread to another. You're wasting a ThreadPool thread that could serve other requests. The correct fix is to use genuinely async DB APIs: <code>await conn.QueryAsync()</code>, <code>await command.ExecuteReaderAsync()</code>, etc.`,
+    trap: "Thinking Task.Run makes synchronous code 'async' — it doesn't. It just moves blocking to a different thread."
+  },
+  {
+    section: "C# Internals",
+    time: "~2 min",
+    q: "What is memory pressure and how does the .NET GC respond to it? How would you detect and fix it in a high-throughput loan processing API?",
+    followUp: "What's the Large Object Heap and why does it matter?",
+    answer: `<strong>GC Generations:</strong><br>
+Gen 0 — short-lived objects, collected frequently, fast<br>
+Gen 1 — survived Gen 0, medium-lived<br>
+Gen 2 — long-lived objects, expensive to collect, causes application pauses<br><br>
+<strong>LOH (Large Object Heap):</strong> Objects &gt;85KB go directly to LOH, collected with Gen 2. Never compacted by default (too expensive) — causes heap fragmentation. Common source: large byte arrays, large strings.<br><br>
+<strong>Detection:</strong> ETW events, dotMemory, PerfMon counters — Gen 2 collection frequency, LOH size, allocation rate.<br><br>
+<strong>Fix patterns for high-throughput loan API:</strong>
+<pre><span class="cm">// ArrayPool eliminates LOH pressure for large buffers</span>
+<span class="kw">var</span> pool = <span class="tp">ArrayPool</span>&lt;<span class="kw">byte</span>&gt;.Shared;
+<span class="kw">byte</span>[] buffer = pool.<span class="fn">Rent</span>(<span class="num">128000</span>);
+<span class="kw">try</span> { <span class="cm">/* use buffer */</span> }
+<span class="kw">finally</span> { pool.<span class="fn">Return</span>(buffer); }
+
+<span class="cm">// Span&lt;T&gt; for slice operations — zero allocation</span>
+<span class="tp">ReadOnlySpan</span>&lt;<span class="kw">char</span>&gt; slice = loanNumber.<span class="fn">AsSpan</span>(<span class="num">0</span>, <span class="num">8</span>);</pre>`,
+    trap: "Not knowing about LOH, or thinking GC is 'free' because it's managed. Gen 2 collections cause Stop-The-World pauses."
+  },
+  {
+    section: "C# Internals",
+    time: "~2 min",
+    q: "I hand you a C# codebase with a serious performance problem. You profile it and find most allocations come from string concatenation in a hot loop that formats loan application audit entries. How do you fix it and what are your options in order of preference?",
+    followUp: "What's the difference between string.Format, string interpolation, and StringBuilder in terms of what the compiler actually generates?",
+    answer: `<strong>Fix options in preference order:</strong><br><br>
+1. <strong>StringBuilder</strong> — single allocation, append in-place<br>
+2. <strong>String.Create</strong> (.NET 5+) — zero-allocation string construction with a known length<br>
+3. <strong>Span&lt;char&gt; / stackalloc</strong> — for short strings, allocate on stack<br>
+4. <strong>ValueStringBuilder</strong> (internal .NET pattern) — ref struct, stack-based<br><br>
+<strong>What the compiler generates:</strong>
+<pre><span class="cm">// string.Format → calls String.Format with object[] args → boxing</span>
+<span class="kw">string</span> s = <span class="kw">string</span>.<span class="fn">Format</span>(<span class="str">"{0} {1}"</span>, loanId, amount);
+
+<span class="cm">// String interpolation → same as Format in older .NET</span>
+<span class="cm">// In .NET 6+ with DefaultInterpolatedStringHandler → optimized, fewer allocs</span>
+<span class="kw">string</span> s = <span class="str">$"{loanId} {amount}"</span>;
+
+<span class="cm">// StringBuilder — best for loops</span>
+<span class="kw">var</span> sb = <span class="kw">new</span> <span class="tp">StringBuilder</span>(<span class="num">256</span>); <span class="cm">// pre-size to avoid resizing</span>
+<span class="kw">foreach</span> (<span class="kw">var</span> entry <span class="kw">in</span> auditEntries)
+    sb.<span class="fn">AppendFormat</span>(<span class="str">"{0}: {1}\n"</span>, entry.Timestamp, entry.Action);</pre>
+<strong>Key insight:</strong> In .NET 6+, string interpolation uses <code>DefaultInterpolatedStringHandler</code> which avoids boxing and intermediate allocations. Pre-.NET 6 it was essentially string.Format.`,
+    trap: "Not knowing that .NET 6+ changed string interpolation compilation, or not mentioning ArrayPool/Span options."
+  },
+
+  // ═══════════════════════════════════════════
+  // SECTION 2 — SQL SERVER DEEP
+  // ═══════════════════════════════════════════
+  {
+    section: "SQL Server",
+    time: "~3 min",
+    q: "Explain parameter sniffing. Give me a specific scenario where it causes production performance degradation in a loan origination system, and walk me through every option to fix it.",
+    followUp: "When would you NOT use OPTION(RECOMPILE)?",
+    answer: `<strong>What it is:</strong> SQL Server compiles a stored procedure's execution plan on first execution using the parameter values passed at that time. That plan is cached. Future executions with different parameters reuse the same plan — even if it's suboptimal.<br><br>
+<strong>Loan origination scenario:</strong> A proc searches loans by status. First call: <code>@status = 'PENDING'</code> — 50,000 rows, optimizer chooses table scan, caches that plan. Next call: <code>@status = 'APPROVED_TODAY'</code> — 3 rows, but the cached scan plan runs. Index seek would be 1000x faster.<br><br>
+<strong>Fix options ranked:</strong><br>
+<pre><span class="cm">-- 1. OPTION(RECOMPILE) — recompile every execution, eliminates sniffing</span>
+<span class="cm">--    Cost: CPU overhead per call. Don't use on high-frequency procs.</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> Loans <span class="kw">WHERE</span> Status = @status
+<span class="kw">OPTION</span>(RECOMPILE);
+
+<span class="cm">-- 2. OPTIMIZE FOR — hint the optimizer for a specific value or UNKNOWN</span>
+<span class="kw">OPTION</span>(<span class="kw">OPTIMIZE FOR</span> (@status = <span class="str">'PENDING'</span>));
+<span class="kw">OPTION</span>(<span class="kw">OPTIMIZE FOR</span> (@status UNKNOWN)); <span class="cm">-- uses average stats</span>
+
+<span class="cm">-- 3. Local variable trick — breaks sniffing, uses average stats</span>
+<span class="kw">DECLARE</span> @localStatus <span class="kw">NVARCHAR</span>(<span class="num">50</span>) = @status;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> Loans <span class="kw">WHERE</span> Status = @localStatus;
+
+<span class="cm">-- 4. Dynamic SQL — new plan per unique param combination</span>
+<span class="cm">-- 5. Multiple specialized procs per common param pattern</span></pre>
+<strong>Don't use OPTION(RECOMPILE)</strong> on high-frequency lightweight queries — the recompilation CPU cost exceeds the benefit.`,
+    trap: "Only knowing one fix, or not knowing the local variable trick, or recommending OPTION(RECOMPILE) universally."
+  },
+  {
+    section: "SQL Server",
+    time: "~2 min",
+    q: "What is a key lookup (RID lookup) in an execution plan? How does it appear and how do you eliminate it?",
+    followUp: "When is a key lookup actually acceptable?",
+    answer: `<strong>What it is:</strong> A non-clustered index satisfies the WHERE clause (index seek), but the query needs columns not in that index. SQL Server does a second lookup to the clustered index (or heap) for each row to fetch those columns. This is the key lookup — it's a per-row operation.<br><br>
+<strong>How it appears:</strong> In execution plan as "Key Lookup" or "RID Lookup" operator. Often shown with thick arrows indicating high row estimates. The nested loops between seek + lookup is the performance killer at scale.<br><br>
+<strong>Eliminate with covering index:</strong>
+<pre><span class="cm">-- Query: filter by CustomerId, return Amount + Status</span>
+<span class="cm">-- Without covering: seek on CustomerId, then key lookup per row</span>
+
+<span class="cm">-- With covering index: no key lookup needed</span>
+<span class="kw">CREATE INDEX</span> IX_Loans_CustomerId_Cover
+<span class="kw">ON</span> Loans (CustomerId)
+<span class="kw">INCLUDE</span> (Amount, Status, LoanDate); <span class="cm">-- INCLUDE = leaf-level only</span></pre>
+<strong>When acceptable:</strong> Key lookup is fine when row count is very low — e.g., single-row lookups by primary key where a covering index would be wasteful overhead. The optimizer weighs this. If you see it on 10,000+ rows it's a problem.`,
+    trap: "Not knowing the difference between INCLUDE columns and index key columns, or saying 'just add more indexes' without understanding covering."
+  },
+  {
+    section: "SQL Server",
+    time: "~3 min",
+    q: "You're given a stored procedure that ran in 200ms six months ago and now takes 45 seconds on the same data volume. Walk me through your entire diagnostic process.",
+    followUp: "Statistics haven't been updated in 8 months. What specifically goes wrong?",
+    answer: `<strong>Diagnostic process:</strong><br><br>
+<strong>1. Get the actual execution plan</strong> (not estimated) — look for:<br>
+— Fat arrows (row estimate vs actual row mismatch)<br>
+— Table/index scans where seeks are expected<br>
+— Key lookups on large row counts<br>
+— Hash joins where nested loops would be better (or vice versa)<br><br>
+<strong>2. Check statistics age:</strong>
+<pre><span class="kw">SELECT</span> name, <span class="fn">STATS_DATE</span>(object_id, stats_id) <span class="kw">AS</span> LastUpdated
+<span class="kw">FROM</span> sys.stats
+<span class="kw">WHERE</span> object_id = <span class="fn">OBJECT_ID</span>(<span class="str">'Loans'</span>);</pre>
+<strong>3. Check plan cache for the proc:</strong>
+<pre><span class="kw">SELECT</span> qs.execution_count, qs.total_elapsed_time,
+       <span class="fn">SUBSTRING</span>(qt.text, <span class="num">1</span>, <span class="num">200</span>) <span class="kw">AS</span> query_text
+<span class="kw">FROM</span> sys.dm_exec_query_stats qs
+<span class="kw">CROSS APPLY</span> sys.<span class="fn">dm_exec_sql_text</span>(qs.sql_handle) qt
+<span class="kw">WHERE</span> qt.text <span class="kw">LIKE</span> <span class="str">'%ProcName%'</span>;</pre>
+<strong>4. Check fragmentation, missing index DMVs, wait stats</strong><br><br>
+<strong>Stale statistics impact:</strong> Optimizer uses histogram to estimate row counts. If data distribution changed significantly (e.g., loan volume 10x, new status values), estimates are wildly wrong. Optimizer picks wrong join type, wrong index, wrong parallelism threshold. Fix: <code>UPDATE STATISTICS Loans WITH FULLSCAN;</code>`,
+    trap: "Starting with 'rebuild indexes' without diagnosing first. Or not knowing DMVs for plan cache inspection."
+  },
+  {
+    section: "SQL Server",
+    time: "~2 min",
+    q: "What is the difference between a temp table, table variable, and CTE in SQL Server? Give me the specific scenario where each is the right choice in a loan origination context.",
+    followUp: "Does a table variable get a query plan? Can it use statistics?",
+    answer: `<strong>Temp Table (#table):</strong><br>
+— Stored in tempdb, has statistics, can have indexes<br>
+— Persists for session/scope<br>
+— Can be referenced multiple times in a batch<br>
+— Good for: large intermediate result sets, need multiple passes, need indexes<br>
+— Loan use case: staging 50K loan applications for batch processing<br><br>
+<strong>Table Variable (@table):</strong><br>
+— Also in tempdb (despite what old docs say)<br>
+— No statistics (pre-SQL 2019), optimizer assumes 1 row → bad plans on large sets<br>
+— Scope: batch only, doesn't participate in transactions the same way<br>
+— Good for: small sets (&lt;100 rows), passing data to TVF parameters<br>
+— SQL 2019+: Deferred compilation improves estimates<br><br>
+<strong>CTE:</strong><br>
+— Not materialized — it's a named subquery, rewritten inline<br>
+— Not a temp storage mechanism<br>
+— Can be referenced multiple times but recalculated each time<br>
+— Good for: readability, recursive queries (org hierarchy, workflow steps)<br><br>
+<strong>Table variable statistics:</strong> Pre-2019 no column statistics — optimizer blindly estimates 1 row regardless of actual data. This causes terrible join plans. SQL 2019 with deferred compilation fixes this by waiting until execution to compile.`,
+    trap: "Saying table variables are 'in memory' — they're not, they're in tempdb. Or not knowing about statistics behavior."
+  },
+  {
+    section: "SQL Server",
+    time: "~2 min",
+    q: "Write me a query that finds the most recent loan application for each customer, but only where that application is in PENDING status and the customer has more than 3 total applications.",
+    followUp: "Your query works but takes 12 seconds on 10M rows. What's your optimization approach?",
+    answer: `<pre><span class="kw">WITH</span> CustomerCounts <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> CustomerId
+    <span class="kw">FROM</span> LoanApplications
+    <span class="kw">GROUP BY</span> CustomerId
+    <span class="kw">HAVING COUNT</span>(*) > <span class="num">3</span>
+),
+RankedApps <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        la.ApplicationId, la.CustomerId, la.Status,
+        la.ApplicationDate, la.Amount,
+        <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span> (
+            <span class="kw">PARTITION BY</span> la.CustomerId
+            <span class="kw">ORDER BY</span> la.ApplicationDate <span class="kw">DESC</span>
+        ) <span class="kw">AS</span> rn
+    <span class="kw">FROM</span> LoanApplications la
+    <span class="kw">INNER JOIN</span> CustomerCounts cc <span class="kw">ON</span> la.CustomerId = cc.CustomerId
+    <span class="kw">WHERE</span> la.Status = <span class="str">'PENDING'</span>
+)
+<span class="kw">SELECT</span> ApplicationId, CustomerId, Amount, ApplicationDate
+<span class="kw">FROM</span> RankedApps
+<span class="kw">WHERE</span> rn = <span class="num">1</span>;</pre>
+<strong>Optimization:</strong><br>
+1. Filtered index on Status = 'PENDING' — dramatically reduces scan scope<br>
+2. Composite index on (CustomerId, ApplicationDate DESC) INCLUDE (ApplicationId, Amount, Status)<br>
+3. Evaluate if CustomerCounts CTE can be replaced with a COUNT OVER window function to avoid two passes<br>
+4. Check if the HAVING filter can be pushed earlier in the plan`,
+    trap: "Using a subquery instead of CTE making it unreadable, or not knowing how to optimize window functions with indexes."
+  },
+
+  // ═══════════════════════════════════════════
+  // SECTION 3 — SYSTEM DESIGN
+  // ═══════════════════════════════════════════
+  {
+    section: "System Design",
+    time: "~5 min",
+    q: "Design the backend architecture for LoanDepot's loan origination API. Handle 10,000 applications per day, third-party credit checks, document verification, compliance logging, and status notifications. Walk me through the entire architecture.",
+    followUp: "A credit bureau goes down for 2 hours. What happens to in-flight applications?",
+    answer: `<strong>Core Architecture:</strong><br><br>
+<strong>API Layer:</strong> ASP.NET Core Web API, stateless, behind Azure API Gateway. Auth via OAuth2/JWT.<br><br>
+<strong>Application Pipeline — Event-Driven:</strong>
+<pre>Submit → [ApplicationService] → [Queue: ApplicationCreated]
+    → [CreditCheckWorker] → calls Experian/Equifax async
+    → [DocumentWorker] → validates uploaded docs
+    → [UnderwritingWorker] → decision engine
+    → [NotificationWorker] → email/SMS via SendGrid/Twilio</pre>
+<strong>Key design decisions:</strong><br>
+1. Each step is a separate microservice consuming from Azure Service Bus<br>
+2. Application state stored in SQL Server with optimistic locking<br>
+3. Every state transition is an immutable event in EventLog table (audit trail)<br>
+4. Idempotency keys on all external API calls<br><br>
+<strong>Credit bureau outage handling:</strong><br>
+— Circuit breaker (Polly) — after N failures, short-circuit for T seconds<br>
+— Applications enter CREDIT_CHECK_PENDING state, stored with RetryAfter timestamp<br>
+— Background job polls and retries with exponential backoff<br>
+— Webhook callback pattern if bureau supports it<br>
+— Dead letter queue for applications that exhaust retries → manual review queue<br>
+— SLA communication triggered automatically when circuit opens`,
+    trap: "Designing a synchronous monolith, or not addressing the circuit breaker pattern, or missing the audit trail requirement."
+  },
+  {
+    section: "System Design",
+    time: "~3 min",
+    q: "How do you design an API for loan status updates that 1000 mortgage brokers are polling every 30 seconds? The current implementation is killing the database.",
+    followUp: "A broker needs real-time notification when their loan moves to APPROVED. How do you add that without polling?",
+    answer: `<strong>The Polling Problem:</strong> 1000 brokers × every 30s = 2000 req/min hammering SQL. Most return unchanged data.<br><br>
+<strong>Fix Layer 1 — Caching:</strong>
+<pre><span class="cm">// Redis cache with short TTL</span>
+<span class="kw">var</span> key = <span class="str">$"loan_status:{loanId}"</span>;
+<span class="kw">var</span> cached = <span class="kw">await</span> redis.<span class="fn">GetAsync</span>(key);
+<span class="kw">if</span> (cached != <span class="kw">null</span>) <span class="kw">return</span> cached;
+<span class="kw">var</span> status = <span class="kw">await</span> db.<span class="fn">GetStatusAsync</span>(loanId);
+<span class="kw">await</span> redis.<span class="fn">SetAsync</span>(key, status, ttl: <span class="tp">TimeSpan</span>.<span class="fn">FromSeconds</span>(<span class="num">30</span>));
+<span class="kw">return</span> status;</pre>
+<strong>Fix Layer 2 — ETags / Conditional GET:</strong><br>
+Client sends If-None-Match header. Server returns 304 Not Modified if unchanged. No body sent, minimal processing.<br><br>
+<strong>Fix Layer 3 — Push via SignalR/WebSockets:</strong><br>
+— Broker connects via SignalR hub on login<br>
+— When loan transitions to APPROVED, event fires → push to broker's connection<br>
+— No polling needed for real-time notifications<br><br>
+<strong>Fix Layer 4 — Webhooks:</strong><br>
+Broker registers a callback URL. On status change, POST to their endpoint with HMAC signature. More reliable than WebSockets for B2B.`,
+    trap: "Only suggesting caching without addressing the real-time requirement, or not knowing SignalR/WebSocket patterns."
+  },
+  {
+    section: "System Design",
+    time: "~3 min",
+    q: "Design the audit logging system for a mortgage platform. Every field change on every loan application must be logged, queryable, and immutable. CFPB can audit you at any time.",
+    followUp: "How do you query 'show me all changes made by user X to loan Y between date A and date B' without killing performance?",
+    answer: `<strong>Schema Design — Event Sourcing approach:</strong>
+<pre><span class="kw">CREATE TABLE</span> AuditLog (
+    AuditId      <span class="kw">BIGINT IDENTITY PRIMARY KEY</span>,
+    EntityType   <span class="kw">NVARCHAR</span>(<span class="num">50</span>)  <span class="cm">-- 'LoanApplication'</span>
+    EntityId     <span class="kw">UNIQUEIDENTIFIER NOT NULL</span>,
+    UserId       <span class="kw">UNIQUEIDENTIFIER NOT NULL</span>,
+    Action       <span class="kw">NVARCHAR</span>(<span class="num">20</span>)   <span class="cm">-- INSERT/UPDATE/DELETE</span>
+    FieldName    <span class="kw">NVARCHAR</span>(<span class="num">100</span>),
+    OldValue     <span class="kw">NVARCHAR</span>(<span class="num">MAX</span>),
+    NewValue     <span class="kw">NVARCHAR</span>(<span class="num">MAX</span>),
+    Timestamp    <span class="kw">DATETIME2 NOT NULL DEFAULT</span> <span class="fn">SYSUTCDATETIME</span>(),
+    CorrelationId <span class="kw">UNIQUEIDENTIFIER</span> <span class="cm">-- ties multi-field changes together</span>
+);
+<span class="cm">-- Immutability: no UPDATE/DELETE permissions on this table</span>
+<span class="cm">-- Separate DB user for audit writes only, no deletes</span></pre>
+<strong>Write path:</strong> Interceptor/decorator pattern in the service layer captures before/after state. Never in the trigger (hard to test) unless regulatory requirement demands it.<br><br>
+<strong>Query optimization:</strong>
+<pre><span class="cm">-- Composite filtered index for the CFPB query pattern</span>
+<span class="kw">CREATE INDEX</span> IX_Audit_Entity_User_Date
+<span class="kw">ON</span> AuditLog (EntityId, UserId, Timestamp)
+<span class="kw">INCLUDE</span> (FieldName, OldValue, NewValue, Action);</pre>
+For long-term archival: partition by month, move old partitions to Azure Blob cold storage after 90 days, queryable via Azure Synapse.`,
+    trap: "Using triggers (hard to test, performance impact), or not addressing immutability at the permission level, or missing CorrelationId for multi-field atomicity."
+  },
+  {
+    section: "System Design",
+    time: "~3 min",
+    q: "You're asked to migrate a 10-year-old monolithic ASP.NET WebForms loan platform to microservices. The system processes $50M in loans daily. How do you approach this migration without downtime?",
+    followUp: "What's the Strangler Fig pattern and why is it the only correct answer here?",
+    answer: `<strong>The Strangler Fig pattern is the only correct answer</strong> because a big-bang rewrite of a $50M/day system is career suicide.<br><br>
+<strong>Approach:</strong><br>
+1. <strong>API Gateway as façade</strong> — place a proxy in front of the monolith immediately. All traffic flows through it. This is the routing layer you'll use to gradually divert.<br><br>
+2. <strong>Identify seams</strong> — find bounded contexts: Application Intake, Credit Check, Document Management, Underwriting, Closing. These become candidate services.<br><br>
+3. <strong>Extract leaf services first</strong> — pick the service with fewest dependencies (e.g., Document Management). Extract, run in parallel with monolith, route 5% traffic → validate → increase → 100%.<br><br>
+4. <strong>Shared database first, then split</strong> — new service initially shares the monolith DB. Split the schema later once behavior is stable.<br><br>
+5. <strong>Feature flags everywhere</strong> — instant rollback without deployment.<br><br>
+6. <strong>Dual-write during transition</strong> — new service writes to both old and new schema during migration window.<br><br>
+<strong>What kills migration projects:</strong> Trying to redesign the domain model AND extract the service simultaneously. One at a time.`,
+    trap: "Proposing a big-bang rewrite, or not knowing Strangler Fig by name, or not mentioning the data migration complexity."
+  },
+
+  // ═══════════════════════════════════════════
+  // SECTION 4 — ARCHITECTURE & .NET
+  // ═══════════════════════════════════════════
+  {
+    section: "Architecture & .NET",
+    time: "~2 min",
+    q: "Explain the ASP.NET Core middleware pipeline. How is it different from HTTP Modules in classic ASP.NET? Give me a real use case where you'd write custom middleware in a mortgage platform.",
+    followUp: "What's the difference between Use, Run, and Map in the pipeline?",
+    answer: `<strong>Classic ASP.NET HTTP Modules:</strong> Event-based, attached to specific pipeline events (BeginRequest, AuthenticateRequest, etc.). Global, hard to test, XML config.<br><br>
+<strong>ASP.NET Core Middleware:</strong> Sequential pipeline of delegates. Each component calls next() to pass to the next middleware. Order matters. Fully testable, code-configured.<br>
+<pre><span class="kw">public class</span> <span class="tp">LoanCorrelationMiddleware</span>
+{
+    <span class="kw">private readonly</span> <span class="tp">RequestDelegate</span> _next;
+    <span class="kw">public</span> <span class="tp">LoanCorrelationMiddleware</span>(<span class="tp">RequestDelegate</span> next) => _next = next;
+
+    <span class="kw">public async</span> <span class="tp">Task</span> <span class="fn">InvokeAsync</span>(<span class="tp">HttpContext</span> ctx) {
+        <span class="kw">var</span> correlationId = ctx.Request.Headers[<span class="str">"X-Correlation-Id"</span>]
+            .FirstOrDefault() ?? <span class="tp">Guid</span>.<span class="fn">NewGuid</span>().<span class="fn">ToString</span>();
+        ctx.Response.Headers[<span class="str">"X-Correlation-Id"</span>] = correlationId;
+        <span class="kw">using</span> (<span class="tp">LogContext</span>.<span class="fn">PushProperty</span>(<span class="str">"CorrelationId"</span>, correlationId))
+            <span class="kw">await</span> <span class="fn">_next</span>(ctx);
+    }
+}</pre>
+<strong>Use</strong> — adds middleware, calls next (continues pipeline)<br>
+<strong>Run</strong> — terminal middleware, does NOT call next (short-circuits)<br>
+<strong>Map</strong> — branches pipeline based on path prefix<br>
+<strong>MapWhen</strong> — branches based on any condition`,
+    trap: "Confusing middleware order (auth must come before authorization), or not knowing Use vs Run distinction."
+  },
+  {
+    section: "Architecture & .NET",
+    time: "~2 min",
+    q: "What is the Unit of Work pattern and how does it relate to Entity Framework's DbContext? In a loan origination flow, where does the transaction boundary belong?",
+    followUp: "A developer puts DbContext as a Singleton. What happens?",
+    answer: `<strong>Unit of Work:</strong> Tracks all changes during a business transaction and commits them atomically. EF Core's DbContext IS the Unit of Work — it tracks entity state changes and wraps them in a transaction on SaveChanges.<br><br>
+<strong>Repository + UoW pattern:</strong>
+<pre><span class="kw">public class</span> <span class="tp">LoanApplicationService</span>
+{
+    <span class="kw">private readonly</span> <span class="tp">ILoanRepository</span> _loans;
+    <span class="kw">private readonly</span> <span class="tp">IAuditRepository</span> _audit;
+    <span class="kw">private readonly</span> <span class="tp">LoanDbContext</span> _context; <span class="cm">// Unit of Work</span>
+
+    <span class="kw">public async</span> <span class="tp">Task</span> <span class="fn">SubmitApplicationAsync</span>(<span class="tp">LoanApplication</span> app) {
+        <span class="kw">await</span> _loans.<span class="fn">AddAsync</span>(app);
+        <span class="kw">await</span> _audit.<span class="fn">LogAsync</span>(<span class="str">"APPLICATION_SUBMITTED"</span>, app.Id);
+        <span class="kw">await</span> _context.<span class="fn">SaveChangesAsync</span>(); <span class="cm">// one atomic transaction</span>
+    }
+}</pre>
+<strong>Transaction boundary:</strong> At the use case/service method level — not in the repository. Repository adds to context, service commits.<br><br>
+<strong>DbContext as Singleton — catastrophe:</strong><br>
+— DbContext is NOT thread-safe<br>
+— Tracks entities across all requests — memory leak, stale data<br>
+— Concurrent requests corrupt change tracker<br>
+— Correct lifetime: <strong>Scoped</strong> (one per HTTP request)`,
+    trap: "Putting SaveChanges in the repository (breaks atomic multi-repo operations), or not knowing DbContext thread-safety issues."
+  },
+  {
+    section: "Architecture & .NET",
+    time: "~2 min",
+    q: "Walk me through what happens when a deadlock occurs in SQL Server between two concurrent loan application updates. How do you detect, reproduce, and prevent it?",
+    followUp: "Your fix is to use READ UNCOMMITTED isolation. Why is that dangerous in a financial application?",
+    answer: `<strong>What happens:</strong> Transaction A holds lock on LoanApplications, wants CreditCheck. Transaction B holds lock on CreditCheck, wants LoanApplications. SQL Server detects the cycle, picks one as the deadlock victim (usually the cheaper transaction), rolls it back, raises error 1205.<br><br>
+<strong>Detection:</strong>
+<pre><span class="cm">-- Extended Events deadlock trace</span>
+<span class="cm">-- Or: Trace Flag 1222 in SQL error log</span>
+<span class="cm">-- Or: sys.dm_exec_requests + sys.dm_os_waiting_tasks</span></pre>
+<strong>Prevention:</strong><br>
+1. Consistent access order — always lock tables in the same sequence across all transactions<br>
+2. Keep transactions short — don't hold locks across user interactions<br>
+3. Index properly — table scans take broader locks than seeks<br>
+4. Optimistic concurrency (EF rowversion) — no locks at read time, detect conflict at write<br>
+5. Retry logic with exponential backoff on 1205<br><br>
+<strong>READ UNCOMMITTED in financial apps — NEVER:</strong><br>
+— Dirty reads — you read uncommitted data from a transaction that may roll back<br>
+— You could read a loan amount that was mid-update and rolled back<br>
+— Regulatory violation — CFPB requires accurate data<br>
+— Phantom reads, non-repeatable reads<br>
+If you need read performance without blocking, use <strong>READ COMMITTED SNAPSHOT ISOLATION (RCSI)</strong> — row versioning, no dirty reads.`,
+    trap: "Recommending READ UNCOMMITTED (a financial disaster), or not knowing RCSI, or not having a retry strategy."
+  },
+  {
+    section: "Architecture & .NET",
+    time: "~2 min",
+    q: "What is CQRS and when is it the right architecture for a loan platform? What problem does it actually solve versus what problem people think it solves?",
+    followUp: "Do you need event sourcing to implement CQRS?",
+    answer: `<strong>What CQRS actually is:</strong> Separate the read model from the write model. Commands mutate state. Queries return data. They use different models, potentially different databases.<br><br>
+<strong>What it solves in a loan platform:</strong><br>
+— Loan application writes are complex — business rules, validation, state machine<br>
+— Loan application reads are diverse — broker dashboard, underwriter view, compliance report, customer portal — all different shapes<br>
+— With one model, you're always compromising one side for the other<br>
+— With CQRS: write model = normalized SQL, read model = denormalized read store (Redis, Cosmos, materialized view)<br><br>
+<strong>What people think it solves:</strong> "Performance" — incorrect framing. CQRS is an architectural pattern for managing complexity in domain models, not primarily a performance optimization.<br><br>
+<strong>When NOT to use it:</strong> Simple CRUD applications. The complexity overhead (two models, eventual consistency, separate infrastructure) is not justified for a basic admin form.<br><br>
+<strong>CQRS does NOT require event sourcing:</strong> You can implement CQRS with a simple repository pattern. Event sourcing is an independent decision — it stores state as events rather than current value. They're complementary but not coupled.`,
+    trap: "Conflating CQRS with event sourcing, or recommending it for every application without knowing the complexity cost."
+  },
+
+  // ═══════════════════════════════════════════
+  // SECTION 5 — LEADERSHIP & JUDGMENT
+  // ═══════════════════════════════════════════
+  {
+    section: "Leadership",
+    time: "~3 min",
+    q: "You join LoanDepot as Principal Engineer. In week two you review the codebase and find: stored procedures doing business logic, no unit tests, DbContext as Singleton, and a 5000-line God class. The team has been shipping features successfully. How do you approach this?",
+    followUp: "The tech lead who built this system is still on the team and is defensive. How do you handle that specifically?",
+    answer: `<strong>The instinct to rewrite everything is wrong.</strong> The system ships. That has value. Your job is to make it better without breaking it.<br><br>
+<strong>Week 2-4: Understand before acting</strong><br>
+— Read the system, understand the business domain deeply<br>
+— Find where bugs cluster (git blame, bug tracker) — that's where to start<br>
+— Identify the highest-risk areas (payment processing, compliance logging)<br><br>
+<strong>The approach:</strong><br>
+1. <strong>No big rewrites</strong> — Boy Scout Rule: leave code better than you found it<br>
+2. Add tests to code you touch before changing it (characterization tests)<br>
+3. Extract business logic from stored procs incrementally as features are touched<br>
+4. Fix DbContext lifetime in a PR with clear explanation — non-controversial, measurable improvement<br>
+5. Break the God class along seams when you're already in it for a feature<br><br>
+<strong>The defensive tech lead:</strong><br>
+— Never attack the code in a meeting — attack the problem ("we have a bug cluster here, let's understand why")<br>
+— Give them credit for what works — the system ships, that's real<br>
+— Involve them in the solution — "you know this system better than anyone, what would you do differently now?"<br>
+— Ownership: give them the first refactoring PR to review — not to gatekeep, but to transfer pattern knowledge<br>
+— If defensive turns adversarial — take it private, direct, one conversation. Never let it fester.`,
+    trap: "Proposing a 3-month rewrite in week two, or handling the tech lead politically rather than directly."
+  },
+  {
+    section: "Leadership",
+    time: "~2 min",
+    q: "You're in a sprint planning meeting. A product manager insists a critical compliance feature can ship in 2 weeks. You know it needs 6 weeks to do correctly. How do you handle this?",
+    followUp: "PM says 'just do the minimum to check the compliance box.' What do you do?",
+    answer: `<strong>This is not a technical disagreement. It's a risk communication problem.</strong><br><br>
+<strong>In the meeting:</strong><br>
+"I want us to ship this right. Let me show you what 2 weeks gets us versus what 6 weeks gets us — not as a timeline argument, but as a risk conversation."<br><br>
+<strong>The options framing:</strong><br>
+Option A (2 weeks): Logs the event, passes surface audit. Doesn't handle edge cases X, Y, Z. If CFPB requests a deep audit, these gaps become violations.<br>
+Option B (6 weeks): Full coverage, defensible under deep audit.<br><br>
+<strong>Escalate the right question:</strong> "This isn't my call to make — it's a risk tolerance decision. Let me get the right people in the room." Legal/compliance should own that decision, not engineering or product.<br><br>
+<strong>If PM says 'just check the box':</strong><br>
+— Document it. Email after the meeting: "As discussed, we're implementing the minimum viable compliance logging for this sprint, deferring full coverage to [date]. Flagging this for compliance review."<br>
+— You've now made it their explicit decision, not yours<br>
+— If it later becomes a violation, the paper trail is clear<br>
+— If this pattern repeats — escalate to your manager. This is a cultural problem, not a PM problem.`,
+    trap: "Just caving and shipping the bad version, or getting confrontational in the meeting, or not documenting the decision."
+  },
+  {
+    section: "Leadership",
+    time: "~2 min",
+    q: "You're interviewing a candidate for a Senior Software Engineer role. Their LeetCode is perfect but when you ask them to design a loan status notification system, they freeze. Do you pass or fail them?",
+    followUp: "What does your ideal Principal Engineer interview process look like?",
+    answer: `<strong>Context-dependent, but lean toward fail for Senior level.</strong><br><br>
+Senior Engineers at a mortgage company will never implement Dijkstra's. They will constantly design systems that send notifications, handle failures, and scale. Design is the job.<br><br>
+<strong>How I handle the freeze:</strong><br>
+Don't move on immediately. Probe: "Walk me through the last system you built end-to-end." If they still can't reason about systems in conversation, that's the signal. LeetCode is a different skill — pattern recognition under time pressure. System design reveals how they actually think about their work.<br><br>
+<strong>My ideal Principal interview process:</strong><br>
+1. <strong>Technical screen (30 min)</strong> — breadth check, can they converse fluently across the stack<br>
+2. <strong>Code review exercise</strong> — give them real (sanitized) production code with real problems. How do they reason about it?<br>
+3. <strong>System design (60 min)</strong> — design a system in their domain. Open-ended, no right answer. How do they handle ambiguity, tradeoffs, pushback?<br>
+4. <strong>Past project deep-dive</strong> — "take me through the most complex thing you've built, every decision, every mistake." Fraud is immediately obvious here — you can't fake depth on your own work.<br>
+5. <strong>No LeetCode at Principal level.</strong> I've never merged sort a linked list in production.`,
+    trap: "Either dismissing the LeetCode signal entirely, or failing them purely on one freeze without probing further."
+  },
+  {
+    section: "Leadership",
+    time: "~2 min",
+    q: "What's the most expensive technical mistake you've made in production? What did you learn and how did you change your process?",
+    followUp: "How do you build a team culture where engineers admit mistakes quickly instead of hiding them?",
+    answer: `<strong>This is about self-awareness and intellectual honesty. The interviewer is evaluating two things:</strong><br>
+1. Do you have enough production scar tissue to have real mistakes?<br>
+2. Do you have the maturity to own them without deflecting?<br><br>
+<strong>What to avoid:</strong><br>
+— "I can't think of any significant mistakes" → you're either lying or haven't shipped enough<br>
+— Blaming the team, process, or requirements → red flag<br>
+— A mistake with no learning → missed the point<br><br>
+<strong>Structure your answer:</strong><br>
+Situation → specific technical decision → production impact (real numbers: downtime, data affected, cost) → root cause analysis → what changed in process<br><br>
+<strong>On building a culture of fast failure reporting:</strong><br>
+— Blameless postmortems — the system failed, not the person<br>
+— The leader goes first — share your own mistakes publicly in team settings<br>
+— Celebrate early escalation: "Good catch, thanks for flagging before it got worse"<br>
+— Never shoot the messenger — if the first instinct after a bug report is to find who to blame, engineers will stop reporting early<br>
+— Psychological safety is a leadership deliverable, not a HR program`,
+    trap: "No real answer, or a humble-brag 'mistake', or not having a concrete process change."
+  },
+  {
+    section: "Leadership",
+    time: "~2 min",
+    q: "You're three weeks from a major loan platform release. A developer finds a race condition in the payment processing module that could double-charge customers under high load. It would take two weeks to fix properly. What do you do?",
+    followUp: "Management says the release date is fixed due to a regulatory deadline. Now what?",
+    answer: `<strong>Immediate actions:</strong><br>
+1. Reproduce it — understand the exact conditions that trigger it<br>
+2. Estimate real probability — is this 1-in-1M or 1-in-100 under load?<br>
+3. Assess blast radius — what's the worst-case financial and legal exposure?<br><br>
+<strong>Never ship a known double-charge bug.</strong> Full stop. This is regulatory exposure, customer harm, and brand damage that no release timeline justifies.<br><br>
+<strong>Options to present to management:</strong><br>
+A) Two-week fix, push release<br>
+B) Implement a compensating control: idempotency key check at the payment gateway level + rate limiting + duplicate transaction detection. 3-day implementation. Degrades gracefully. Ship with monitoring.<br>
+C) Feature flag the payment module out of the release. Ship everything else on schedule.<br><br>
+<strong>Under regulatory deadline with fixed date:</strong><br>
+Option B or C are the correct answers. A regulatory deadline does not override the risk of double-charging customers — regulators care more about that outcome than the release date.<br>
+Document everything. Get legal involved. Make it a written decision from the right level of leadership.<br><br>
+<strong>The principle:</strong> Your job as Principal Engineer is to surface the real risk, quantify it honestly, and present options. The decision belongs to the business. The documentation belongs to you.`,
+    trap: "Shipping with known bug, or making the decision unilaterally without escalating, or not having a compensating control option."
+  },
+  {
+    section: "Leadership",
+    time: "~2 min",
+    q: "What is your philosophy on technical debt? How do you communicate it to non-technical stakeholders and budget time for it?",
+    followUp: "A developer on your team wants to spend a full sprint refactoring a module that works fine. Do you approve it?",
+    answer: `<strong>Technical debt is not inherently bad.</strong> Debt taken deliberately with a plan to repay is a valid tool — moving fast to hit a market window, then cleaning up. Debt taken accidentally or ignored is the problem.<br><br>
+<strong>Communication to non-technical stakeholders:</strong><br>
+Never say "refactoring" or "technical debt" — they hear "we're fixing our mistakes on your time."<br><br>
+Instead: "This module handles $50M of daily transactions. Its current structure makes every change take 3x longer and carries a 40% bug rate based on our last 6 deployments. Investing 2 weeks here cuts future feature delivery time by 30% and reduces incident risk."<br><br>
+<strong>Budgeting:</strong> The 80/20 rule — 20% of every sprint is engineering investment. Not negotiable. This is how you prevent the second-system effect and maintain velocity.<br><br>
+<strong>Full sprint refactoring a working module:</strong><br>
+<strong>No — unless there's a compelling reason.</strong><br>
+Questions first: What specific problem does this solve? What features become faster afterward? What bugs become less likely?<br>
+If the answer is "it bothers me" — that's not a business justification.<br>
+If the answer is "we're adding feature X in 3 weeks and this makes that 60% faster" — that's a business justification.<br>
+Refactoring is a means, not an end.`,
+    trap: "Either dismissing tech debt entirely or giving unlimited refactoring time. Both extremes are wrong."
+  },
+  {
+    section: "Leadership",
+    time: "~2 min",
+    q: "You disagree strongly with the CTO's architectural decision to use a NoSQL database for the core loan ledger. You've been overruled. What do you do?",
+    followUp: "Six months later your prediction comes true — data consistency issues in the ledger. How do you handle that conversation?",
+    answer: `<strong>Before the decision is final:</strong><br>
+Make your case once, clearly, with evidence — not opinion. "Here are the ACID requirements for a financial ledger, here are the specific consistency guarantees NoSQL gives up, here's what that means for reconciliation."<br>
+Ask for the counterargument — understand why they chose it. You might be wrong.<br>
+Escalate once if it's a genuine risk — "I want to make sure this risk is understood at the right level."<br><br>
+<strong>Once overruled:</strong><br>
+Disagree and commit. Fully. You don't get to half-commit. Implement it as well as it can be implemented. Document your concerns in writing (architecture decision record) without finger-pointing — "Alternative considered: NoSQL. Tradeoffs noted: eventual consistency, no multi-document transactions. Decision: proceed."<br><br>
+<strong>Six months later when it breaks:</strong><br>
+<strong>Never say "I told you so."</strong> Never. It destroys trust and solves nothing.<br>
+Instead: "We're seeing the consistency issues we modeled earlier. Here's what I recommend we do now."<br>
+You had your dissent on record. The decision was made. Now you're a partner solving a problem, not a scorekeeper.<br><br>
+The engineers who build the most trust are the ones who commit fully when overruled and are collaborative when right — not vindicated.`,
+    trap: "'I told you so' in any form, or continuing to undermine the decision after being overruled."
+  }
+];
+
+let current = 0;
+let scores = new Array(questions.length).fill(null);
+let timerInterval = null;
+let secondsLeft = 3600;
+let revealed = new Array(questions.length).fill(false);
+
+function startInterview() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('interview').style.display = 'block';
+  renderDots();
+  renderQuestion();
+  startTimer();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    const m = Math.floor(secondsLeft / 60);
+    const s = secondsLeft % 60;
+    const el = document.getElementById('timer');
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (secondsLeft <= 600) el.className = 'timer warning';
+    if (secondsLeft <= 300) el.className = 'timer danger';
+    if (secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      showResults();
+    }
+  }, 1000);
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const area = document.getElementById('question-area');
+  
+  area.innerHTML = `
+    <div class="q-meta">
+      <span class="q-number">Q${String(current+1).padStart(2,'0')}</span>
+      <span class="q-category">${q.section}</span>
+      <span class="q-time">${q.time}</span>
+    </div>
+    <div class="question-text">${q.q}</div>
+    <div class="follow-up">↳ Follow-up: ${q.followUp}</div>
+    <button class="answer-toggle" onclick="toggleAnswer()" id="toggle-btn">
+      Reveal Answer
+    </button>
+    <div class="answer-box ${revealed[current] ? 'show' : ''}" id="answer-box">
+      <div class="answer-label">// Model Answer</div>
+      <div class="answer-text">${q.answer}</div>
+      ${q.trap ? `<div class="trap-box"><div class="trap-label">// Trap — interviewers watch for this</div>${q.trap}</div>` : ''}
+    </div>
+    <div class="score-row" style="${revealed[current] ? '' : 'display:none'}" id="score-row">
+      <span class="score-label">Self-score:</span>
+      <button class="score-btn nail ${scores[current]==='nail'?'active':''}" onclick="score('nail')">Nailed It</button>
+      <button class="score-btn partial ${scores[current]==='partial'?'active':''}" onclick="score('partial')">Partial</button>
+      <button class="score-btn miss ${scores[current]==='miss'?'active':''}" onclick="score('miss')">Missed</button>
+    </div>
+  `;
+
+  document.getElementById('progress-text').textContent = `Q${current+1} of ${questions.length}`;
+  document.getElementById('progress-bar').style.width = `${((current+1)/questions.length)*100}%`;
+  document.getElementById('prev-btn').disabled = current === 0;
+  document.getElementById('next-btn').textContent = current === questions.length - 1 ? 'Finish →' : 'Next →';
+  updateDots();
+  area.scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function toggleAnswer() {
+  const box = document.getElementById('answer-box');
+  const btn = document.getElementById('toggle-btn');
+  const scoreRow = document.getElementById('score-row');
+  if (box.classList.contains('show')) {
+    box.classList.remove('show');
+    btn.textContent = 'Reveal Answer';
+    scoreRow.style.display = 'none';
+    revealed[current] = false;
+  } else {
+    box.classList.add('show');
+    btn.textContent = 'Hide Answer';
+    scoreRow.style.display = 'flex';
+    revealed[current] = true;
+  }
+}
+
+function score(val) {
+  scores[current] = val;
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.score-btn.${val}`).classList.add('active');
+  updateDots();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next < 0) return;
+  if (next >= questions.length) { showResults(); return; }
+  current = next;
+  renderQuestion();
+}
+
+function renderDots() {
+  const container = document.getElementById('q-dots');
+  container.innerHTML = questions.map((_, i) => 
+    `<div class="q-dot ${i===current?'current':''}" onclick="jumpTo(${i})" title="Q${i+1}"></div>`
+  ).join('');
+}
+
+function updateDots() {
+  const dots = document.querySelectorAll('.q-dot');
+  dots.forEach((dot, i) => {
+    dot.className = 'q-dot';
+    if (i === current) dot.classList.add('current');
+    else if (scores[i] === 'nail') dot.classList.add('nailed');
+    else if (scores[i] === 'partial') dot.classList.add('partial');
+    else if (scores[i] === 'miss') dot.classList.add('missed');
+  });
+}
+
+function jumpTo(i) {
+  current = i;
+  renderQuestion();
+}
+
+function showResults() {
+  clearInterval(timerInterval);
+  document.getElementById('interview').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+
+  const scored = scores.filter(s => s !== null);
+  const nailed = scores.filter(s => s === 'nail').length;
+  const partial = scores.filter(s => s === 'partial').length;
+  const missed = scores.filter(s => s === 'miss').length;
+  const pct = scored.length > 0 ? Math.round(((nailed + partial * 0.5) / scored.length) * 100) : 0;
+
+  document.getElementById('results-title').textContent = pct >= 80 ? "You're ready." : pct >= 60 ? "Almost there." : "Keep sharpening.";
+  document.getElementById('score-display').textContent = `${pct}%`;
+  document.getElementById('score-display').style.color = pct >= 80 ? '#27ae60' : pct >= 60 ? '#e67e22' : '#c0392b';
+
+  document.getElementById('score-breakdown').innerHTML = `
+    <div class="breakdown-item"><span class="breakdown-num" style="color:#27ae60">${nailed}</span><span class="breakdown-label">Nailed</span></div>
+    <div class="breakdown-item"><span class="breakdown-num" style="color:#e67e22">${partial}</span><span class="breakdown-label">Partial</span></div>
+    <div class="breakdown-item"><span class="breakdown-num" style="color:#c0392b">${missed}</span><span class="breakdown-label">Missed</span></div>
+    <div class="breakdown-item"><span class="breakdown-num">${questions.length - scored.length}</span><span class="breakdown-label">Unscored</span></div>
+  `;
+
+  const verdicts = {
+    high: `You know this stack cold. The C# internals, the SQL Server depth, the system design patterns — all there. Walk into that interview like you've been doing this for 26 years. Because you have.`,
+    mid: `Solid foundation with a few gaps. Review the questions you missed — especially parameter sniffing, the async deadlock scenario, and the payment race condition response. Those are the questions this interviewer will definitely ask.`,
+    low: `More prep needed on the deep technical areas. The SQL Server and async internals questions will come. Spend 2 days on execution plans, parameter sniffing, and async/await state machine internals before the interview.`
+  };
+
+  document.getElementById('verdict').textContent = pct >= 80 ? verdicts.high : pct >= 60 ? verdicts.mid : verdicts.low;
+}
+
+function restart() {
+  clearInterval(timerInterval);
+  current = 0;
+  scores = new Array(questions.length).fill(null);
+  secondsLeft = 3600;
+  revealed = new Array(questions.length).fill(false);
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('interview').style.display = 'block';
+  document.getElementById('timer').className = 'timer';
+  renderDots();
+  renderQuestion();
+  startTimer();
+}
+</script>
+</body>
+</html>
