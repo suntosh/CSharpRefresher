@@ -1,0 +1,15 @@
+Index:
+B-tree structure that stores column values with pointers
+to the corresponding rows. Allows seeks instead of scans.
+One read to find the B-tree node, one read to get the row.
+O(log n) lookup instead of O(n) full table scan.
+
+Clustered Index:
+Determines the physical order of data in the table itself.
+One per table. In SQL Server the primary key is clustered
+by default. The leaf level of the B-tree IS the data.
+
+Non-Clustered Index:
+Separate B-tree structure with leaf nodes containing
+the index key + a pointer back to the data row.
+Multiple allowed per table
