@@ -1,0 +1,35 @@
+# Build output
+bin/
+obj/
+out/
+TestResults/
+
+# Visual Studio
+.vs/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / ReSharper
+.idea/
+_ReSharper*/
+*.DotSettings.user
+
+# VS Code
+.vscode/
+
+# Logs / temp
+*.log
+*.tmp
+*.temp
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
