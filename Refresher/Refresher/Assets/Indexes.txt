@@ -13,3 +13,5 @@ Non-Clustered Index:
 Separate B-tree structure with leaf nodes containing
 the index key + a pointer back to the data row.
 Multiple allowed per table
+
+BTrees-https://www.youtube.com/watch?v=K1a2Bk8NrYQ
